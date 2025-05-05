@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="JJK Hackathon 2025: A 24-hour anime-inspired coding event at IIMT University, Meerut. Unleash your cursed technique to solve real-world problems!">
+  <meta name="keywords" content="JJK Hackathon, Jujutsu Kaisen, Hackathon 2025, Coding Event, IIMT University, GeeksforGeeks">
+  <meta name="author" content="Nakul Jindal">
+  <title>Unleash Your Cursed Technique</title>
+  <link rel="shortcut icon" href="jjk-hackathon-logo.png" type="image/x-icon">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.20.6/babel.min.js"></script>
+  <style>
+    @keyframes spark {
+      0%, 100% { opacity: 0.6; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.2); }
+    }
+    .spark-effect {
+      background: radial-gradient(circle, rgba(147, 51, 234, 0.2) 0%, transparent 70%);
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: -1;
+      animation: spark 5s ease-in-out infinite;
+    }
+    .card-hover:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    }
+    .timeline-line {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 4px;
+      background: linear-gradient(to bottom, #9333ea, #3b82f6);
+      z-index: -1;
+    }
+    .hero-bg {
+      background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('bg-img.png');
+      background-size: cover;
+      background-position: absolute;
+
+    }
+    @media (max-width: 768px) {
+      .timeline-line {
+        left: 20px;
+      }
+    }
+  </style>
+</head>
+<body className="bg-gray-900 text-white">
+  <div id="root"></div>
+  <script type="text/babel">
+    function NavBar() {
+  const [isOpen, setIsOpen] = React.useState(false);
+  const navLinks = [
+    { name: "About", href: "#about" },
+    { name: "Register", href: "#register" },
+    { name: "Timeline", href: "#timeline" },
+    { name: "Themes", href: "#themes" },
+    { name: "Sponsors", href: "#sponsors" },
+    { name: "Prizes", href: "#prizes" },
+    { name: "FAQ", href: "#faq" },
+    { name: "Contact", href: "#contact" },
+  ];
+
+  return (
+    <nav className="bg-gray-900 sticky top-0 z-50 border-b border-purple-600">
+      <div className="max-w-7xl mx-auto px-4 flex justify-between items-center py-4">
+        <div className="flex items-center space-x-3">
+          {/* Placeholder for hackathon logo */}
+          <div className="h-10 w-10 bg-gray-700 rounded-full flex items-center justify-center">
+        <img src="jjk-hackathon-logo.png" alt="JJK Hackathon Logo" className="h-full w-full rounded-full" />
+          </div>
+          <div className="text-2xl font-bold font-[Orbitron, sans-serif] text-white">
+            JJK Hackathon
+          </div>
+        </div>
+        <div className="hidden md:flex items-center space-x-6">
+          {navLinks.map((link) => (
+            <a
+              key={link.name}
+              href={link.href}
+              className="text-white hover:text-purple-400 transition"
+            >
+              {link.name}
+            </a>
+          ))}
+          <a
+            href="https://unstop.com/o/M7s5pI1"
+            className="bg-purple-600 text-white px-4 py-2 rounded-full font-semibold hover:bg-purple-500 transition"
+            
+          >
+            Register Now
+          </a>
+        </div>
+        <div className="md:hidden">
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="text-white focus:outline-none"
+          >
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d={isOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16m-7 6h7"}
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+      {isOpen && (
+        <div className="md:hidden bg-gray-800 px-4 py-2">
+          {navLinks.map((link) => (
+            <a
+              key={link.name}
+              href={link.href}
+              className="block py-2 text-white hover:text-purple-400 transition"
+              onClick={() => setIsOpen(false)}
+            >
+              {link.name}
+            </a>
+          ))}
+          <a
+            href=""
+            className="block py-2 text-white bg-purple-600 text-center rounded-full font-semibold hover:bg-purple-500 transition"
+            onClick={() => setIsOpen(false)}
+          >
+            Register Now
+          </a>
+        </div>
+      )}
+    </nav>
+  );
+}
+    function Countdown() {
+      const targetDate = new Date("2025-05-24T09:00:00").getTime();
+      const [timeLeft, setTimeLeft] = React.useState({
+        days: 0,
+        hours: 0,
+        minutes: 0,
+        seconds: 0,
+      });
+
+      React.useEffect(() => {
+        const timer = setInterval(() => {
+          const now = new Date().getTime();
+          const distance = targetDate - now;
+
+          if (distance < 0) {
+            clearInterval(timer);
+            setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+            return;
+          }
+
+          setTimeLeft({
+            days: Math.floor(distance / (1000 * 60 * 60 * 24)),
+            hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+            minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
+            seconds: Math.floor((distance % (1000 * 60)) / 1000),
+          });
+        }, 1000);
+
+        return () => clearInterval(timer);
+      }, []);
+
+      return (
+        <div className="mt-8 flex justify-center space-x-4">
+          {[
+            { label: "Days", value: timeLeft.days },
+            { label: "Hours", value: timeLeft.hours },
+            { label: "Minutes", value: timeLeft.minutes },
+            { label: "Seconds", value: timeLeft.seconds },
+          ].map((item) => (
+            <div key={item.label} className="text-center">
+              <div className="bg-gray-800 text-purple-400 text-2xl md:text-4xl font-bold px-4 py-2 rounded-lg">
+                {item.value.toString().padStart(2, "0")}
+              </div>
+              <div className="text-gray-300 mt-2">{item.label}</div>
+            </div>
+          ))}
+        </div>
+      );
+    }
+
+    function Hero() {
+      return (
+        <section className="relative h-screen flex flex-col justify-center items-center text-center bg-gray-900 hero-bg overflow-hidden">
+          <div className="spark-effect"></div>
+          {/* Placeholder for hackathon logo */}
+          <div className="mb-6 h-24 w-24 bg-gray-700 rounded-full flex items-center justify-center">
+            <img src="jjk-hackathon-logo.png" alt="JJK Hackathon Logo" className="h-full w-full" />
+          </div>
+          <h1 className="text-5xl md:text-7xl font-bold mb-4 font-[Orbitron, sans-serif] text-white">
+            Unleash Your Cursed Technique
+          </h1>
+          <p className="text-lg md:text-xl mb-8 max-w-2xl px-4 text-white">
+            JJK Hackathon 2025 is a 24-hour coding marathon at IIMT University, Meerut, where tech enthusiasts battle “cursed problems” with innovative solutions. Inspired by the intense world of Jujutsu Kaisen, this anime-themed event blends creativity, coding, and collaboration. Code overnight, innovate, and win epic prizes!
+          </p>
+          <a
+            href="#about"
+            className="bg-purple-600 text-white px-8 py-3 rounded-full font-semibold hover:bg-purple-500 transition"
+          >
+            Know More
+          </a>
+          <Countdown />
+        </section>
+      );
+    }
+
+    function About() {
+      return (
+        <section id="about" className="py-16 bg-gray-900">
+          <div className="max-w-5xl mx-auto px-4 text-center">
+            <h2 className="text-4xl font-bold mb-8 font-[Orbitron, sans-serif] text-white">
+              About JJK Hackathon 2025
+            </h2>
+            <p className="text-lg max-w-3xl mx-auto text-white">
+
+            <strong font="times-new-roman"><i>This Hackathon is Your Domain Expansion — Make It Legendary!</i></strong><br/><br/>
+            
+                JJK Hackathon 2025 is an electrifying 24-hour coding marathon set to take place at IIMT University, Meerut. Bringing together over passionate tech enthusiasts from various backgrounds, this event promises an adrenaline-fueled experience where innovation meets intensity. Participants will immerse themselves in solving “cursed problems” — complex, real-world challenges that demand creativity, collaboration, and technical brilliance.
+<br/><br/>
+Inspired by the powerful and thrilling universe of Jujutsu Kaisen, the hackathon will capture the anime's spirit of resilience, strategy, and fearless innovation. From dusk till dawn, teams will ideate, design, and develop solutions that not only showcase their technical prowess but also their ability to think outside the box under pressure.
+<br/><br/>
+Whether you’re a seasoned developer or a budding coder, JJK Hackathon 2025 offers an unforgettable platform to sharpen your skills, network with like-minded individuals, and battle it out for epic prizes and recognition. Prepare to code through the night, overcome challenges, and unleash your cursed energy in a competitive yet fun-filled environment.
+<br/><br/>
+Join us for an action-packed journey where technology meets anime magic — because in this battle of brains, only the strongest sorcerers of code will emerge victorious!
+                </p>
+
+        
+          </div>
+        </section>
+      );
+    }
+
+
+    function Register() {
+      return(
+        <section id="register" className="py-16 bg-gray-800 justify-center items-center">
+          <div className="max-w-5xl mx-auto px-4 relative max-w-4xl mx-auto " >
+            <h2 className="text-4xl font-bold mb-8 font-[Orbitron, sans-serif] text-center text-white">
+              How to register for the Hackathon?
+            </h2>
+            <p className="text-center font-semibold margin-15px text-white bg-gray-900 p-6 rounded-lg card-hover transition-transform border border-purple-600 ">
+            Follow these simple steps to register and submit your idea for Unleash Your Cursed Technique – JJK Hackathon 2025: <br />
+              <br />
+</p>
+            <div>
+            <p className="text-left margin-15px text-white bg-gray-900 p-6 rounded-lg card-hover transition-transform border border-purple-600 ">
+            Step 1: Click on "Register Now"<br />
+Go to our official website or Unstop listing page.<br />
+
+Click the "Register Now" button — this will redirect you to our Unstop registration portal.<br /><br /></p>
+</div> <div><p  className="text-left margin-15px text-white bg-gray-900 p-6 rounded-lg card-hover transition-transform border border-purple-600">
+Step 2: Fill the Registration Form on Unstop<br />
+Complete the required details including:<br />
+
+Team Name & Member Info<br />
+
+College/Institute Name<br />
+
+Contact Information<br />
+
+Ensure all information is correct before submitting.<br /><br /></p>
+</div><div><p className="text-left margin-15px text-white bg-gray-900 p-6 rounded-lg card-hover transition-transform border border-purple-600">
+Step 3: Submit Your Idea (PPT Format)<br />
+After registration, you’ll receive a prompt or link to submit your idea as a PPT.<br />
+
+The presentation should explain:<br />
+
+Problem Statement you're solving<br />
+
+Your proposed solution<br />
+
+Tech stack, approach, team roles<br />
+
+Last Date to register: 18th May 2025<br /><br /></p>
+</div><div><p className="text-left margin-15px text-white bg-gray-900 p-6 rounded-lg card-hover transition-transform border border-purple-600">
+Step 4: Selection Result Announcement<br />
+All submitted entries will be evaluated by our team.<br />
+Shortlisted teams will be announced on 20th May 2025.<br /><br />
+</p>
+</div><div>
+  <p className="text-left margin-15px text-white bg-gray-900 p-6 rounded-lg card-hover transition-transform border border-purple-600 ">
+    Step 5: Final Hackathon – Onsite<br />
+Date: 24–25 May 2025<br />
+Venue: IIMT Engineering College, Meerut<br /><br /></p> </div>
+<p className="text-center margin-15px text-white bg-gray-900 p-6 rounded-lg card-hover transition-transform border border-purple-600 font-semibold ">
+Shortlisted teams will be invited to participate in the 24-hour offline hackathon and bring their ideas to life!
+        </p>
+            
+          </div>
+          
+        </section>
+      )
+    }
+    function Timeline() {
+      const events = [
+      { time: "May 24, 08:30 AM – 09:30 AM", event: "Arrival Time" },
+      { time: "May 24, 09:30 AM – 10:00 AM", event: "Opening Ceremony" },
+      { time: "May 24, 10:00 AM – 01:00 PM", event: "Hacking Begins – Round 1" },
+      { time: "May 24, 01:00 PM – 02:00 PM", event: "Lunch Break" },
+      { time: "May 24, 02:00 PM – 06:00 PM", event: "Development Continues – Mid Check-in" },
+      { time: "May 24, 06:00 PM – 07:00 PM", event: "Tea + Mentor Sessions" },
+      { time: "May 24, 07:00 PM – 10:00 PM", event: "Coding + Fun Side Activity" },
+      { time: "May 24, 10:00 PM – 12:00 AM", event: "Night Code Sprint (Checkpoint Evaluation)" },
+      { time: "May 25, 12:00 AM – 07:00 AM", event: "Overnight Coding Marathon" },
+      { time: "May 25, 07:00 AM – 08:00 AM", event: "Final Touches & Submission" },
+      { time: "May 25, 08:00 AM – 10:00 AM", event: "Project Demos + Judging" },
+      { time: "May 25, 10:00 AM – 11:00 AM", event: "Result Declaration + Prize Distribution" },
+      ];
+
+      return (
+        <section id="timeline" className="py-16 bg-gray-900">
+          <h2 className="text-4xl font-bold text-center mb-12 font-[Orbitron, sans-serif] text-white">
+            Event Schedule
+          </h2>
+          <div className="max-w-4x1 mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 items-center justify-center gap-6 px-4">
+            <div className="timeline-line h-full"></div>
+            {events.map((item, index) => (
+              <div
+                key={index}
+                className={`bg-gray-900 p-6 rounded-lg card-hover transition-transform border border-purple-600`}
+              >
+                <div className="w-full px-4">
+                  <div className="bg-gray-800 p-4 rounded-lg card-hover transition-transform">
+                    <h3 className="text-xl font-semibold text-white">{item.time}</h3>
+                    <p className="text-white">{item.event}</p>
+                  </div>
+                </div>
+                <div className="hidden md:block w-1/2"></div>
+              </div>
+            ))}
+          </div>
+        </section>
+      );
+    }
+
+    function Themes() {
+const tracks = [
+  {
+    title: "Healthcare",
+    description: "Transforming patient care with AI-driven diagnostics, telemedicine, and smart health solutions.",
+    icon: "🩺"
+  },
+  {
+    title: "Fintech",
+    description: "Revolutionizing finance with blockchain, AI-powered analytics, and seamless digital transactions.",
+    icon: "💳"
+  },
+  {
+    title: "Agrotech",
+    description: "Harnessing technology to enhance farming efficiency, sustainability, and food security.",
+    icon: "🌾"
+  },
+  {
+    title: "Disaster Management",
+    description: "Utilizing tech for real-time disaster prediction, rapid response, and effective recovery strategies.",
+    icon: "🌪️"
+  },
+  {
+    title: "Sustainable Development",
+    description: "Driving eco-friendly innovations to build a greener, more sustainable future.",
+    icon: "🌍"
+  },
+  {
+    title: "Waste Management & Recycling",
+    description: "Redefining waste management with smart recycling solutions and circular economy initiatives.",
+    icon: "♻️"
+  },
+  {
+    title: "AI/ML",
+    description: "Unlocking the potential of artificial intelligence and machine learning in diverse applications.",
+    icon: "🤖"
+  },
+  {
+    title: "Blockchain",
+    description: "Ensuring transparency, security, and decentralization across industries with blockchain technology.",
+    icon: "🔗"
+  },
+  {
+    title: "Cybersecurity",
+    description: "Safeguarding digital assets with advanced security practices and proactive threat detection.",
+    icon: "🔒"
+  },
+  {
+    title: "EdTech",
+    description: "Revolutionizing education through AI, interactive platforms, and immersive learning experiences.",
+    icon: "📚"
+  },
+  {
+    title: "AR/VR & Immersive Tech",
+    description: "Blending reality with innovation to create engaging virtual and augmented experiences.",
+    icon: "🕶️"
+  },
+  {
+    title: "Student Innovation",
+    description: "Empowering student-driven solutions that push the boundaries of technology and creativity.",
+    icon: "🎓"
+  }
+];
+
+      return (
+        <section id="themes" className="py-16 bg-gray-800">
+          <h2 className="text-4xl font-bold text-center mb-12 font-[Orbitron, sans-serif] text-white">
+            Hackathon Tracks
+          </h2>
+          <div className="max-w-4x4 mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 items-center justify-center gap-6 px-4">
+            {tracks.map((track, index) => (
+              <div
+                key={index}
+                className="bg-gray-900 p-6 rounded-lg card-hover transition-transform border border-purple-600"
+              >
+                <span className="text-4xl block mb-4 text-white">{track.icon}</span>
+                <h3 className="text-xl font-semibold mb-2 text-white">{track.title}</h3>
+                <p className="text-white">{track.description}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      );
+    }
+
+    function Sponsors() {
+      return (
+        <section id="sponsors" className="py-16 bg-gray-900">
+          <h2 className="text-4xl font-bold text-center mb-12 font-[Orbitron, sans-serif] text-white">
+            Our Sponsors
+          </h2>
+          <div className="max-w-4xl mx-auto px-4 flex flex-wrap justify-center gap-8">
+            {/* Placeholder for GeeksforGeeks logo */}
+            <div className="h-16 w-32 bg-white rounded flex items-center justify-center">
+              <img src="gfg-logo.png" alt="GeeksforGeeks" width="100px" />
+            </div>
+            <div className="h-16 w-32 bg-white rounded flex items-center justify-center">
+              <img src="xyz-logo-color.png" alt="gen.xyz" width="100px" />
+            </div>
+            <div className="h-16 w-32 bg-white rounded flex items-center justify-center">
+              <img src="unstop-logo.svg" alt="Unstop logo" width="100px" />
+            </div>
+            
+          </div>
+          <div className="text-center mt-8">
+            <a
+              href="mailto:gdg@iimtindia.net"
+              className="bg-purple-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-purple-500 transition"
+            >
+              Become a Sponsor
+            </a>
+          </div>
+        </section>
+      );
+    }
+    function CommunityPartners() {
+      return (
+        <section id="CommunityPartners" className="py-16 bg-gray-900">
+          <h2 className="text-4xl font-bold text-center mb-12 font-[Orbitron, sans-serif] text-white">
+        Our Community partners
+          </h2>
+          <div className="max-w-4xl mx-auto px-4 flex flex-wrap justify-center gap-8">
+        {/* Placeholder for Google Developers groups logo */}
+        <div className="h-16 w-32 bg-white rounded flex items-center justify-center overflow-hidden">
+          <img src="gdg-logo.jpg" alt="Google Developers Groups" className="width-100px" />
+        </div>
+        <div className="h-16 w-32 bg-white rounded flex items-center justify-center overflow-hidden">
+          <img src="mlsa-logo.jpg" alt="MLSA IIMT" className="width-100px" />
+        </div>
+          </div>
+          <div className="text-center mt-8">
+        <a
+          href="mailto:gdg@iimtindia.net"
+          className="bg-purple-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-purple-500 transition"
+        >
+          Become a Community partner
+        </a>
+          </div>
+        </section>
+      );
+        
+    }
+
+    function Prizes() {
+      const prizes = [
+        {
+          title: "Winner",
+          description: "₹15,000 + GeeksforGeeks Merchandise",
+          icon: "🏆",
+        },
+        {
+          title: "Runner-Up",
+          description: "₹10,000 + GeeksforGeeks Swags",
+          icon: "🥈",
+        }
+      ];
+
+      return (
+        <section id="prizes" className="py-16 bg-gray-800">
+          <h2 className="text-4xl font-bold text-center mb-12 font-[Orbitron, sans-serif] text-white">
+            Prizes
+          </h2>
+          <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 px-6">
+            {prizes.map((prize, index) => (
+              <div
+                key={index}
+                className="bg-gray-900 p-6 rounded-lg card-hover transition-transform border border-purple-600"
+              >
+                <span className="text-4xl block mb-4 text-white">{prize.icon}</span>
+                <h3 className="text-xl font-semibold mb-2 text-white">{prize.title}</h3>
+                <p className="text-white">{prize.description}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      );
+    }
+
+    function FAQ() {
+      const faqs = [
+        {
+          question: "Who can participate?",
+          answer: "Any student with a tech background (engineering, computer science, etc.) can join. Teams of up to 4 are allowed.",
+        },
+        {
+          question: "How do I register?",
+          answer: "Registration details will be shared soon. Stay tuned on our social media!",
+        },
+        {
+          question: "What is the team size?",
+          answer: "Teams can have 2–4 members. ",
+        },
+        {
+          question: "What are the judging criteria?",
+          answer: "Projects are judged on innovation, technical complexity, impact, and presentation.",
+        },
+        {
+          question: "Do I need prior hackathon experience?",
+          answer: "Nope! Beginners and pros are all welcome to unleash their cursed techniques.",
+        },
+      ];
+
+      return (
+        <section id="faq" className="py-16 bg-gray-900">
+          <h2 className="text-4xl font-bold text-center mb-12 font-[Orbitron, sans-serif] text-white">
+            Frequently Asked Questions
+          </h2>
+          <div className="max-w-4xl mx-auto px-4">
+            {faqs.map((faq, index) => (
+              <div key={index} className="mb-6">
+                <h3 className="text-xl font-semibold mb-2 text-white">{faq.question}</h3>
+                <p className="text-white">{faq.answer}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      );
+    }
+
+    function Contact() {
+      return (
+        <section id="contact" className="py-16 bg-gray-800">
+          <h2 className="text-4xl font-bold text-center mb-12 font-[Orbitron, sans-serif] text-white">
+            Get in Touch
+          </h2>
+          <div className="max-w-4xl mx-auto px-4 text-center">
+            <p className="text-lg mb-4 text-white">
+              Organizer: <span className="font-semibold">Nakul Jindal</span> | <span className="font-semibold">Mohd Kaif</span>
+            </p>
+            <p className="text-lg mb-4 text-white">
+              Phone: <a href="tel:+919719863860" className="underline hover:text-purple-400 text-white">+91 9719863860</a>
+            </p>
+            <p className="text-lg text-white">
+              Email: <a href="mailto:gdg@iimtindia.net" className="underline hover:text-purple-400 text-white">gdg@iimtindia.net</a>
+            </p>
+          </div>
+        </section>
+      );
+    }
+
+    function Footer() {
+      return (
+        <footer className="bg-gray-900 py-8 text-center">
+          <div className="mb-4">
+            {/* Placeholder for social media links */}
+            <a href="https://x.com/Gdgc_iimt" className="text-white hover:text-purple-400 mx-2">Twitter</a>
+            <a href="https://www.instagram.com/gdgc_iimt/" className="text-white hover:text-purple-400 mx-2">Instagram</a>
+            <a href="https://www.linkedin.com/company/gdg-on-campus-iimt/" className="text-white hover:text-purple-400 mx-2">LinkedIn</a>
+          </div>
+          <p className="text-white">
+            Designed with ❤️ for Hackathon Enthusiasts
+          </p>
+          <p className="text-white text-sm mt-2">
+            © 2025 JJK Hackathon. All rights reserved.
+          </p>
+        </footer>
+      );
+    }
+
+    function App() {
+      return (
+        <div>
+          <NavBar />
+          <Hero />
+          <About />
+          <Register/>
+          <Timeline />
+          <Themes />
+          <Sponsors />
+          <CommunityPartners />
+          <Prizes />
+          <FAQ />
+          <Contact />
+          <Footer />
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(<App />);
+  </script>
+</body>
+</html>
